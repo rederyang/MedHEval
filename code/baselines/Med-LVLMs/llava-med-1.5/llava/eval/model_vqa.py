@@ -17,6 +17,11 @@ from transformers import set_seed, logging
 
 logging.set_verbosity_error()
 
+import sys
+sys.path.append("/workspace/VTI")
+
+from experiments.eval.model_utils import load_model, cleanup_model
+
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -32,10 +37,11 @@ def get_chunk(lst, n, k):
 def eval_model(args):
     set_seed(0)
     # Model
-    disable_torch_init()
-    model_path = os.path.expanduser(args.model_path)
-    model_name = get_model_name_from_path(model_path)
-    tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
+    # disable_torch_init()
+    # model_path = os.path.expanduser(args.model_path)
+    # model_name = get_model_name_from_path(model_path)
+    # tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
+    model, tokenizer, image_processor, model_name = load_model()
 
     # questions = [json.loads(q) for q in open(os.path.expanduser(args.question_file), "r")]
     # questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
@@ -123,6 +129,8 @@ def eval_model(args):
         #                            "metadata": {}}) + "\n")
         ans_file.flush()
     ans_file.close()
+
+    cleanup_model(model)
 
 
 if __name__ == "__main__":

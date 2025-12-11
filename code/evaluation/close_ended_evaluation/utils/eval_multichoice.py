@@ -50,7 +50,7 @@ def eval_mc(test_data, out_file):
         writer = csv.writer(outfile)
         writer.writerow(['Pred', 'Label', 'Correct'])
         for test_sample in test_data:
-            if "groun_truth" in test_sample:
+            if "ground_truth" in test_sample:
                 label = test_sample['ground_truth']
             elif "gt_ans" in test_sample:
                 label = test_sample['gt_ans']

@@ -6,11 +6,17 @@ import re
 import json
 
 def eval_yes_no(results):
-    answers = [{"text":line['text']} for line in results]
-    if len(results)>0 and 'gt' not in results[0]:
-        labels = [line['gt_ans'] for line in results]
+    # Support both 'text' and 'model_answer' field names
+    answers = [{"text": line.get('text') or line.get('model_answer', '')} for line in results]
+    if len(results) > 0:
+        if 'gt' in results[0]:
+            labels = [line['gt'] for line in results]
+        elif 'gt_ans' in results[0]:
+            labels = [line['gt_ans'] for line in results]
+        else:
+            labels = [line.get('ground_truth', '') for line in results]
     else:
-        labels = [line['gt'] for line in results]
+        labels = []
     return evaluate_yes_no(answers, labels)
 
 
